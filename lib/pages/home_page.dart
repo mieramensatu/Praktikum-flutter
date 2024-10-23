@@ -17,6 +17,7 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Management System'),
+          automaticallyImplyLeading: false,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -28,7 +29,8 @@ class HomePage extends StatelessWidget {
                   children: [
                     Text(
                       'Nama: Gading Khairlambang',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'NPM: 714220007',
@@ -56,7 +58,8 @@ class HomePage extends StatelessWidget {
                       'Add',
                       Colors.red,
                       AddPage(
-                        onAdd: (invoiceNumber, customerName, itemQuantity, totalSale) {
+                        onAdd: (invoiceNumber, customerName, itemQuantity,
+                            totalSale) {
                           sales.add(Sale(
                             invoiceNumber: invoiceNumber,
                             saleDate: DateTime.now(),
@@ -75,8 +78,8 @@ class HomePage extends StatelessWidget {
                       UpdatePage(
                         sales: sales,
                         onUpdate: (updatedSale) {
-                          int index = sales.indexWhere(
-                            (s) => s.invoiceNumber == updatedSale.invoiceNumber);
+                          int index = sales.indexWhere((s) =>
+                              s.invoiceNumber == updatedSale.invoiceNumber);
                           if (index != -1) {
                             sales[index] = updatedSale;
                           }
@@ -102,14 +105,16 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildGridItem(BuildContext context, IconData icon, String title,
-      Color color, Widget? page, {Function()? onTap}) {
+      Color color, Widget? page,
+      {Function()? onTap}) {
     return GestureDetector(
-      onTap: onTap ?? () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page!),
-        );
-      },
+      onTap: onTap ??
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => page!),
+            );
+          },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
