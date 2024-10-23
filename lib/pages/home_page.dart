@@ -10,66 +10,92 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Management System'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16.0,
-          mainAxisSpacing: 16.0,
-          children: [
-            _buildGridItem(
-              context,
-              Icons.dashboard,
-              'Dashboard',
-              Colors.blue,
-              DashboardPage(sales: sales),
-            ),
-            _buildGridItem(
-              context,
-              Icons.add,
-              'Add',
-              Colors.red,
-              AddPage(
-                onAdd: (invoiceNumber, customerName, itemQuantity, totalSale) {
-                  sales.add(Sale(
-                    invoiceNumber: invoiceNumber,
-                    saleDate: DateTime.now(),
-                    customerName: customerName,
-                    itemQuantity: itemQuantity,
-                    totalSale: totalSale,
-                  ));
-                },
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Management System'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Nama: Gading Khairlambang',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'NPM: 714220007',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            _buildGridItem(
-              context,
-              Icons.update,
-              'Update',
-              Colors.green,
-              UpdatePage(
-                sales: sales,
-                onUpdate: (updatedSale) {
-                  int index = sales.indexWhere(
-                      (s) => s.invoiceNumber == updatedSale.invoiceNumber);
-                  if (index != -1) {
-                    sales[index] = updatedSale;
-                  }
-                },
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16.0,
+                  mainAxisSpacing: 16.0,
+                  children: [
+                    _buildGridItem(
+                      context,
+                      Icons.dashboard,
+                      'Dashboard',
+                      Colors.blue,
+                      DashboardPage(sales: sales),
+                    ),
+                    _buildGridItem(
+                      context,
+                      Icons.add,
+                      'Add',
+                      Colors.red,
+                      AddPage(
+                        onAdd: (invoiceNumber, customerName, itemQuantity, totalSale) {
+                          sales.add(Sale(
+                            invoiceNumber: invoiceNumber,
+                            saleDate: DateTime.now(),
+                            customerName: customerName,
+                            itemQuantity: itemQuantity,
+                            totalSale: totalSale,
+                          ));
+                        },
+                      ),
+                    ),
+                    _buildGridItem(
+                      context,
+                      Icons.update,
+                      'Update',
+                      Colors.green,
+                      UpdatePage(
+                        sales: sales,
+                        onUpdate: (updatedSale) {
+                          int index = sales.indexWhere(
+                            (s) => s.invoiceNumber == updatedSale.invoiceNumber);
+                          if (index != -1) {
+                            sales[index] = updatedSale;
+                          }
+                        },
+                      ),
+                    ),
+                    _buildGridItem(
+                      context,
+                      Icons.logout,
+                      'Logout',
+                      Colors.grey,
+                      null,
+                      onTap: () => _showLogoutDialog(context),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            _buildGridItem(
-              context,
-              Icons.logout,
-              'Logout',
-              Colors.grey,
-              null,
-              onTap: () => _showLogoutDialog(context),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -78,13 +104,12 @@ class HomePage extends StatelessWidget {
   Widget _buildGridItem(BuildContext context, IconData icon, String title,
       Color color, Widget? page, {Function()? onTap}) {
     return GestureDetector(
-      onTap: onTap ??
-          () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => page!),
-            );
-          },
+      onTap: onTap ?? () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => page!),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
