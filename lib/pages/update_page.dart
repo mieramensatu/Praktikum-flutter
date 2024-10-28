@@ -14,25 +14,29 @@ class UpdatePage extends StatefulWidget {
 class _UpdatePageState extends State<UpdatePage> {
   String searchType = 'Invoice';
   String searchTerm = '';
+  List<Sale> searchResults = [];
   Sale? selectedSale;
 
   void _searchSale() {
     if (searchTerm.isEmpty) {
       setState(() {
+        searchResults.clear();
         selectedSale = null;
       });
       return;
     }
 
-    try {
+    searchResults = widget.sales.where((sale) {
       if (searchType == 'Invoice') {
-        selectedSale = widget.sales.firstWhere(
-            (sale) => sale.invoiceNumber == searchTerm);
+        return sale.invoiceNumber == searchTerm;
       } else {
-        selectedSale = widget.sales.firstWhere(
-            (sale) => sale.customerName.toLowerCase() == searchTerm.toLowerCase());
+        return sale.customerName.toLowerCase() == searchTerm.toLowerCase();
       }
-    } catch (e) {
+    }).toList();
+
+    if (searchResults.length == 1) {
+      selectedSale = searchResults[0];
+    } else {
       selectedSale = null;
     }
 
@@ -84,6 +88,26 @@ class _UpdatePageState extends State<UpdatePage> {
               child: Text('Cari'),
             ),
             SizedBox(height: 20),
+
+            // Tampilkan hasil pencarian jika lebih dari satu hasil ditemukan
+            if (searchResults.length > 1) ...[
+              Text('Ditemukan beberapa hasil, pilih yang ingin diperbarui:'),
+              Column(
+                children: searchResults.map((sale) {
+                  return ListTile(
+                    title: Text('Invoice: ${sale.invoiceNumber}'),
+                    subtitle: Text('Customer: ${sale.customerName}'),
+                    onTap: () {
+                      setState(() {
+                        selectedSale = sale;
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ],
+
+            // Form update jika hasil pencarian tunggal atau data dipilih
             if (selectedSale != null) ...[
               Text('Invoice: ${selectedSale!.invoiceNumber}'),
               TextField(
@@ -116,7 +140,7 @@ class _UpdatePageState extends State<UpdatePage> {
                 onPressed: _updateSale,
                 child: Text('Update'),
               ),
-            ] else if (searchTerm.isNotEmpty) ...[
+            ] else if (searchTerm.isNotEmpty && searchResults.isEmpty) ...[
               Text('Data tidak ditemukan untuk $searchTerm'),
             ],
           ],
