@@ -6,7 +6,26 @@ import 'login/login_page.dart';
 import 'sale.dart';
 
 class HomePage extends StatelessWidget {
-  final List<Sale> sales = [];
+  final List<Sale> sales = [
+    Sale(
+        invoiceNumber: 'INV-1730097869517',
+        customerName: 'Gading Khairlambang',
+        itemQuantity: 5,
+        totalSale: 4,
+        saleDate: DateTime.now()),
+    Sale(
+        invoiceNumber: 'INV-17300979110662',
+        customerName: 'Nuril',
+        itemQuantity: 101,
+        totalSale: 100,
+        saleDate: DateTime.now()),
+    Sale(
+        invoiceNumber: 'INV-1730097934540',
+        customerName: 'Ayala',
+        itemQuantity: 500,
+        totalSale: 400,
+        saleDate: DateTime.now()),
+  ];
 
   @override
   Widget build(BuildContext context) {
